@@ -1,5 +1,6 @@
 using ApiReceitas.ApiReceitas.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,9 +28,9 @@ app.MapControllers();
 
 app.Run();
 
-void ConfigureServices(IServiceCollection services)
+public void ConfigureServices(IServiceCollection services)
 {
     services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlite("Data Source=app.db"));
-    services.AddControllers();
+        options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+    // outras configurações
 }

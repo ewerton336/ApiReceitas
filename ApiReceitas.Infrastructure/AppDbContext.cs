@@ -1,20 +1,30 @@
 ﻿using ApiReceitas.ApiReceitas.Domain;
+using ApiReceitas;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiReceitas.ApiReceitas.Infrastructure
+public class AppDbContext : DbContext
 {
-    public class AppDbContext : DbContext
+    public DbSet<Ingrediente> Ingredientes { get; set; }
+
+    public AppDbContext() : this(new DbContextOptionsBuilder<AppDbContext>().UseSqlite(AppConfiguration.Configuration.GetConnectionString("DefaultConnection")).Options)
     {
-        public DbSet<Ingrediente> Ingredientes { get; set; }
+    }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+    }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
         {
-            modelBuilder.Entity<Ingrediente>()
-            .HasKey(i => i.Id);
+            optionsBuilder.UseSqlite(AppConfiguration.Configuration.GetConnectionString("DefaultConnection"));
         }
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Ingrediente>()
+        .HasKey(i => i.Id);
     }
 }
