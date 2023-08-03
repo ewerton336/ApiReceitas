@@ -1,5 +1,5 @@
 ﻿using ApiReceitas.ApiReceitas.Domain;
-using System;
+using System.Linq;
 
 namespace ApiReceitas.ApiReceitas.Infrastructure
 {
@@ -35,6 +35,11 @@ namespace ApiReceitas.ApiReceitas.Infrastructure
         public void SaveChanges()
         {
             _dbContext.SaveChanges();
+        }
+
+        public bool ExistIngredienteByNome(string nome)
+        {
+            return _dbContext.Ingredientes.Any(x => x.Nome == nome);
         }
     }
 }

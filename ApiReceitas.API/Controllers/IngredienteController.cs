@@ -13,11 +13,15 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
     {
         private readonly IngredienteRepository _ingredienteRepository;
         private readonly IMediator _mediator;
+        AppDbContext _context;
 
-        public IngredienteController(IngredienteRepository ingredienteRepository, IMediator mediator)
+        public IngredienteController(IngredienteRepository ingredienteRepository, 
+            IMediator mediator,
+            AppDbContext context)
         {
             _ingredienteRepository = ingredienteRepository;
             _mediator = mediator;
+            _context = context;
         }
 
         // GET: api/Ingrediente
@@ -34,7 +38,7 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Ingrediente>> GetIngrediente(int id)
         {
-            var query = new GetIngredienteQuery(id);
+            var query = new GetIngredienteByIdQuery(id);
             var ingrediente = await _mediator.Send(query);
 
             if (ingrediente == null)
@@ -47,12 +51,17 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
 
         // POST: api/Ingrediente
         [HttpPost]
-        public ActionResult<Ingrediente> CreateIngrediente(Ingrediente ingrediente)
+        public ActionResult<Ingrediente> CreateIngrediente(CreateIngredienteQuery request)
         {
-            _ingredienteRepository.Add(ingrediente);
-            _ingredienteRepository.SaveChanges();
+            try
+            {
+                return Ok(_mediator.Send(request));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            return CreatedAtAction(nameof(GetIngrediente), new { id = ingrediente.Id }, ingrediente);
         }
 
         // PUT: api/Ingrediente/5

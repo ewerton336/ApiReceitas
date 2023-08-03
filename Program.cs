@@ -16,6 +16,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.G
 
 
 builder.Services.AddScoped<IngredienteRepository>();
+builder.Services.AddScoped<AppDbContext>();
 
 var app = builder.Build();
 
