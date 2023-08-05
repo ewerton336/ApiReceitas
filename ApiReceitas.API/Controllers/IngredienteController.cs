@@ -38,15 +38,23 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Ingrediente>> GetIngrediente(int id)
         {
-            var query = new GetIngredienteByIdQuery(id);
-            var ingrediente = await _mediator.Send(query);
-
-            if (ingrediente == null)
+            try
             {
-                return NotFound();
-            }
+                var query = new GetIngredienteByIdQuery(id);
+                var ingrediente = await _mediator.Send(query);
 
-            return Ok(ingrediente);
+                if (ingrediente == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(ingrediente);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         // POST: api/Ingrediente
