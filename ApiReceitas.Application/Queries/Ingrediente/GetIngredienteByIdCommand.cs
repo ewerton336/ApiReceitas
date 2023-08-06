@@ -3,11 +3,11 @@ using MediatR;
 
 namespace ApiReceitas.ApiReceitas.Application.Queries.Ingredientes
 {
-    public class GetIngredienteByIdQuery : IRequest<Ingrediente>
+    public class GetIngredienteByIdCommand : IRequest<Ingrediente>
     {
         public int Id { get; set; }
 
-        public GetIngredienteByIdQuery(int id)
+        public GetIngredienteByIdCommand(int id)
         {
             Id = id;
         }

@@ -1,4 +1,5 @@
-﻿using ApiReceitas.ApiReceitas.Application.Queries.Ingredientes;
+﻿using ApiReceitas.ApiReceitas.Application.Queries;
+using ApiReceitas.ApiReceitas.Application.Queries.Ingredientes;
 using ApiReceitas.ApiReceitas.Application.Queries.Ingredientes.ApiReceitas.ApiReceitas.Application.Queries.Ingredientes;
 using ApiReceitas.ApiReceitas.Domain;
 using ApiReceitas.ApiReceitas.Infrastructure;
@@ -15,7 +16,7 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
         private readonly IMediator _mediator;
         AppDbContext _context;
 
-        public IngredienteController(IngredienteRepository ingredienteRepository, 
+        public IngredienteController(IngredienteRepository ingredienteRepository,
             IMediator mediator,
             AppDbContext context)
         {
@@ -74,38 +75,35 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
 
         // PUT: api/Ingrediente/5
         [HttpPut("{id}")]
-        public IActionResult UpdateIngrediente(int id, Ingrediente updatedIngrediente)
+        public IActionResult UpdateIngrediente(int id, UpdateIngredienteCommand updatedIngrediente)
         {
-            var ingrediente = _ingredienteRepository.GetById(id);
+            updatedIngrediente.Id = id;
 
-            if (ingrediente == null)
+            try
             {
-                return NotFound();
+                _mediator.Send(updatedIngrediente);
+                return NoContent();
             }
-
-            ingrediente.Nome = updatedIngrediente.Nome;
-            // Atualize aqui outras propriedades do ingrediente, se necessário.
-
-            _ingredienteRepository.SaveChanges();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Ingrediente/5
         [HttpDelete("{id}")]
         public IActionResult DeleteIngrediente(int id)
         {
-            var ingrediente = _ingredienteRepository.GetById(id);
-
-            if (ingrediente == null)
+            var command = new DeleteIngredienteCommand(id);
+            try
             {
-                return NotFound();
+                _mediator.Send(command);
+                return NoContent();
             }
-
-            _ingredienteRepository.Remove(ingrediente);
-            _ingredienteRepository.SaveChanges();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

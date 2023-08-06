@@ -6,7 +6,7 @@ namespace ApiReceitas.ApiReceitas.Application.Queries.Ingredientes
 
     namespace ApiReceitas.ApiReceitas.Application.Queries.Ingredientes
     {
-        public class GetAllIngredientesQuery : IRequest<IEnumerable<Ingrediente>>
+        public class GetAllIngredientesCommand : IRequest<IEnumerable<Ingrediente>>
         {
         }
     }

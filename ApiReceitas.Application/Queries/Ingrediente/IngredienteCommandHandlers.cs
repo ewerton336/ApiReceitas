@@ -11,6 +11,7 @@ namespace ApiReceitas.ApiReceitas.Application.Queries.Ingredientes
         IRequestHandler<GetIngredienteByIdCommand, Ingrediente>,
          IRequestHandler<CreateIngredienteCommand, Ingrediente>,
         IRequestHandler<UpdateIngredienteCommand, Ingrediente>,
+        IRequestHandler<DeleteIngredienteCommand, bool>
 
     {
         public IngredienteRepository _ingredienteRepository;
@@ -55,7 +56,7 @@ namespace ApiReceitas.ApiReceitas.Application.Queries.Ingredientes
 
         public Task<Ingrediente> Handle(UpdateIngredienteCommand request, CancellationToken cancellationToken)
         {
-            var ingredienteExistente = _ingredienteRepository.GetById(request.Id);
+            var ingredienteExistente = _ingredienteRepository.GetById(request.Id.Value);
             if (ingredienteExistente == null)
             {
                 throw new Exception($"Ingrediente com o ID = {request.Id} não foi encontrado.");
@@ -71,6 +72,21 @@ namespace ApiReceitas.ApiReceitas.Application.Queries.Ingredientes
             _ingredienteRepository.SaveChanges();
 
             return Task.FromResult(ingredienteExistente);
+        }
+
+        public Task<bool> Handle(DeleteIngredienteCommand request, CancellationToken cancellationToken)
+        {
+            var ingredienteExistente = _ingredienteRepository.GetById(request.Id);
+            if (ingredienteExistente == null)
+            {
+                throw new Exception($"Ingrediente com o ID = {request.Id} não foi encontrado.");
+            }
+
+            _ingredienteRepository.Remove(ingredienteExistente);
+            _ingredienteRepository.SaveChanges();
+
+            return Task.FromResult(true);
+
         }
     }
 }
