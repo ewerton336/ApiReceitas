@@ -28,7 +28,7 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Ingrediente>>> GetIngredientes()
         {
-            var query = new GetAllIngredientesQuery();
+            var query = new GetAllIngredientesCommand();
             var ingredientes = await _mediator.Send(query);
 
             return Ok(ingredientes);
@@ -40,7 +40,7 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
         {
             try
             {
-                var query = new GetIngredienteByIdQuery(id);
+                var query = new GetIngredienteByIdCommand(id);
                 var ingrediente = await _mediator.Send(query);
 
                 if (ingrediente == null)
@@ -59,7 +59,7 @@ namespace ApiReceitas.ApiReceitas.API.Controllers
 
         // POST: api/Ingrediente
         [HttpPost]
-        public ActionResult<Ingrediente> CreateIngrediente(CreateIngredienteQuery request)
+        public ActionResult<Ingrediente> CreateIngrediente(CreateIngredienteCommand request)
         {
             try
             {

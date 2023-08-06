@@ -41,5 +41,10 @@ namespace ApiReceitas.ApiReceitas.Infrastructure
         {
             return _dbContext.Ingredientes.Any(x => x.Nome == nome);
         }
+
+        internal void Update(Ingrediente ingredienteExistente)
+        {
+            _dbContext.Ingredientes.Update(ingredienteExistente);
+        }
     }
 }
