@@ -14,10 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
-//configuração para o docker
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000"; // Captura a porta do ambiente ou usa 5000 como padrão
-var url = $"http://*:{port}"; // Cria a URL
-builder.WebHost.UseUrls(url);
+
 
 
 builder.Services.AddScoped<IngredienteRepository>();
@@ -30,6 +27,17 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    //remover configuração do swagger depois que o docker estiver funcionando
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    //configuração para o docker
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5000"; // Captura a porta do ambiente ou usa 5000 como padrão
+    var url = $"http://*:{port}"; // Cria a URL
+    builder.WebHost.UseUrls(url);
 }
 
 app.UseHttpsRedirection();
