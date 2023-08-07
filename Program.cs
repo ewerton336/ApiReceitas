@@ -14,6 +14,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
+//configuração para o docker
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000"; // Captura a porta do ambiente ou usa 5000 como padrão
+var url = $"http://*:{port}"; // Cria a URL
+builder.WebHost.UseUrls(url);
+
 
 builder.Services.AddScoped<IngredienteRepository>();
 builder.Services.AddScoped<AppDbContext>();
